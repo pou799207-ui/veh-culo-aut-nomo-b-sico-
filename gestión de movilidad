@@ -1,0 +1,18 @@
+Gestión de movilidad
+Gestión de movilidad.
+Nuestro vehículo autónomo básico tiene cuatro movimientos, los cuales son: adelante, atrás, izquierda y derecha. El carro cuenta con dos motores tipo DC130 de 3V-6V, uno que funciona como motor de potencia y el otro como dirección. 
+Motor de dirección:
+Este motor utiliza un mecanismo que primero convierte el movimiento horizontal del eje del motor en un movimiento circular mediante un engranaje de proporción adecuada. A partir de ese segundo engranaje se transmite el movimiento necesario para operar correctamente el sistema de dirección Ackermann. El sistema Ackermann es un mecanismo que permite que las ruedas delanteras giren con ángulos distintos al tomar una curva, de modo que ambas sigan un mismo centro de giro y no derrapen. Esto se logra mediante una geometría precisa de barras y pivotes que hace que la rueda interna gire más que la externa, proporcionando giros más estables, suaves y controlados, tanto en vehículos reales como en robots.
+Motor de potencia:
+En este sistema de engranajes del motor, el movimiento inicia en el motor, cuyo eje lleva un engrane muy pequeño (piñón) que gira a gran velocidad pero con poca fuerza; este piñón mueve un engranaje grande, lo que produce la primera reducción de velocidad y un aumento importante de torque. Ese engranaje grande tiene unido en el mismo eje un engrane pequeño, que gira a la misma velocidad que el grande y transmite la fuerza ya amplificada hacia la siguiente etapa. Luego, este segundo engrane pequeño mueve un último engrane grande, generando una segunda reducción que disminuye aún más la velocidad y aumenta al máximo el torque disponible para el eje final. Gracias a estas dos etapas de reducción, el sistema convierte las altas revoluciones del motor en un movimiento mucho más lento pero suficientemente fuerte para mover las ruedas del vehículo con estabilidad y potencia.
+ 
+Diseño 
+El chasis de nuestro vehículo fue un modelo de carro ULTRAX RC (racing machine) que se encontró en una tienda física, las modificaciones que se le realizaron a nuestro vehículo fueron agregarle un controlador en este caso fue una sp32, dos motores uno para dirección y otro para la potencia, tres sensores ultrasónicos, uno en la parte de enfrente, uno en la parte derecha y otro en la parte izquierda, una batería de 7.5V y 2200mAh y un puente h. Todas estas conexiones se realizaron con jumpers. 
+Para que el carro avance sus motores se utilizaron motores de 5V, los cuales nos ofrecen una potencia buena para alimentar el carrito ya que un motor solo es para la dirección del vehículo. Nuestro motor se implementa a partir de un  modelo de engranajes para que pueda tener la movilidad del movimiento al eje que está compartido por las dos llantas. 
+Nuestro vehículo cuenta con el sistema de ackerman que ayuda para el movimiento de las ruedas delanteras. 
+
+
+
+
+Marisol Martínez Velázquez  5TMECA-AMBI
+Arely Noemi Ramírez García 5TEMCA-AMBI
