@@ -1,0 +1,31 @@
+Gestión de la potencia y los sentidos 
+
+Potencia 
+
+Para garantizar una distribución eficiente y estable de la energía dentro del sistema, se emplearon dos baterías con funciones específicas. La batería principal de 7.5 V y 2200 mA es la encargada de suministrar potencia a los componentes críticos del dispositivo. Esta batería se conecta a un puente H L298N, el cual gestiona y distribuye adecuadamente la energía hacia los dos motores: el motor de potencia y el motor de dirección. Además, gracias a la salida regulada de 5 V que incorpora el propio puente H, es posible alimentar de manera segura a la ESP32, asegurando su correcto funcionamiento mediante la unión de las tierras tanto de la batería principal como de la tarjeta de control, lo que permite mantener un mismo punto de referencia eléctrico.
+
+Por otro lado, se incorporó una batería secundaria de 3 V y 200 mA, destinada exclusivamente a la alimentación de los tres sensores ultrasónicos ubicados en la parte frontal, lateral izquierda y lateral derecha del sistema. Esta separación de fuentes permite evitar interferencias, caídas de voltaje o ruidos eléctricos que pudieran afectar la precisión de los sensores o la estabilidad del microcontrolador.
+
+Finalmente, todas las conexiones fueron realizadas mediante jumpers y puntos de soldadura, asegurando un ensamblaje firme, confiable y adecuado para el funcionamiento continuo del circuito.
+
+Potencia de los motores 
+
+Para el control de los motores se utilizaron las entradas Enable A y Enable B del puente H L298N, las cuales permiten gestionar adecuadamente la modulación por ancho de pulso (PWM) aplicada a cada motor. Esta configuración es fundamental para regular la potencia entregada y, por lo tanto, la velocidad y el comportamiento dinámico del sistema. La lógica de programación se diseñó con base en una regulación precisa de potencia; considerando el rango estándar de PWM de 0 a 255, se determinó un valor de 200 para el motor principal de tracción. Esta selección permite obtener una velocidad suficientemente alta para un desplazamiento eficiente, pero sin exceder los límites mecánicos o comprometer la estabilidad del vehículo.
+
+En cuanto al motor de dirección, su gestión requirió un análisis más minucioso debido a que no funciona como un servomotor —que normalmente posee un control interno de posición—, sino como un motor de rotación continua, lo cual dificulta la delimitación exacta de los ángulos de giro. Este comportamiento implicó un reto importante, pues fue necesario evaluar cuántas vueltas debía ejecutar el motor para que el engranaje acoplado realizara el movimiento correcto sin generar tensiones excesivas ni provocar un desajuste mecánico. Tras múltiples pruebas y observaciones, y considerando la geometría específica del engrane utilizado, se determinó que la operación óptima del motor de dirección se alcanza con un PWM de 80, acompañado de un delay de 20 ms, logrando así un giro controlado, seguro y funcional.
+
+Sensores    
+   
+Los sensores utilizados para nuestro vehículo autónomo básico fueron sensores ultrasonidos, se eligieron porque su detección a corta distancia ya que para las vueltas necesitamos una buena detección de sensores, además de que no dependen de la luz, también no son sensibles al ruido y miden la distancia directamente.
+Se utilizaron poniéndolos en lugares estratégicos de nuestro vehículo, los cuales fueron uno en los lados y otro al frente.
+
+Enfrente
+El sensor frontal detectaba más fácilmente cuando tenía que frenar, retroceder o dar un giro y hacía que dirección y tener una mejor visión. 
+
+Lado derecho/izquierdo:
+Estos sensores los pusimos porque pueden medir el lado libre y para hacer lo giros más seguros, ya que así detecta más fácilmente si tenía que ir en sentido horario o antihorario y evitar chocar en los giros. 
+
+Martínez Velázquez Marisol                5TMECA-AMBI           CECyTEQ Plantel 5 Querétaro
+Ramírez García Arely Noemi  
+
+
