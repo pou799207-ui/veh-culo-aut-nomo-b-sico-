@@ -1,0 +1,198 @@
+Marisol Martínez Velázquez      5TMECA-AMBI
+Arely Noemi Ramírez García 
+
+                                                                           Gestión de obstáculos 
+Descripción del código:
+Este código controla un vehículo autónomo basado en una ESP32 que utiliza tres sensores ultrasónicos (frontal, derecho e izquierdo) para medir distancias y dos motores:uno de potencia para avanzar o retroceder y otro de dirección para girar. Primero se definen las variables y los pines de todos los componentes, luego se incluye una función que activa y lee los sensores ultrasónicos para obtener la distancia. Se implementan funciones para mover el motor principal (avanzar, retroceder y detener) y para girar el motor de dirección hacia la izquierda o derecha, incluyendo pequeños movimientos temporizados para corregir la orientación y luego centrar la dirección. En el loop principal, el robot mide continuamente las distancias y toma decisiones: si el camino frontal está libre avanza recto; si hay un obstáculo compara la distancia lateral para decidir si girar a la derecha o izquierda; si alguna distancia es muy pequeña retrocede para evitar choques; y si ambos lados son iguales retrocede ligeramente y se detiene.
+
+Código:
+Primero, se definen las variables, en este caso variables de distancia provenientes de los sensores ultrasónicos delantero, derecho e izquierdo.
+int DISTANCIASensorA = 0;
+int DISTANCIASensorD = 0;
+int DISTANCIASensorI = 0;
+
+// Motor de dirección (D), el cual tiene 3 pines, los 2 primeros que van directo al motor, y un tercero que funciona con PWM.
+int MotorD1 = 13;
+int MotorD2 = 12;
+int MotorDENA = 14;
+
+// Motor de potencia (P), el cual tiene 3 pines, los 2 primeros que van directo al motor, y un tercero que funciona con PWM.
+
+int pinMotorP1 = 27;
+int pinMotorP2 = 26;
+int MotorDENAP = 19;
+
+// Ahora, definir en qué pines  de la ESP32 se van a conectar los sensores.
+int SensorApinEco = 5;
+int SensorApinGatillo = 17;
+
+int SensorDpinEco = 16;
+int SensorDpinGatillo = 4;
+
+int SensorIpinEco = 15;
+int SensorIpinGatillo = 2;
+
+// FUNCIONES DE SENSORES
+//Hacer funcionar los sensores para que estén emitiendo señales y recibiendo señales constantemente.
+long leerUltrasonico(int trigger, int echo) {
+  pinMode(trigger, OUTPUT);
+  digitalWrite(trigger, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigger, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigger, LOW);
+
+  pinMode(echo, INPUT);
+  return pulseIn(echo, HIGH);
+}
+
+
+// FUNCIONES DE MOTORES
+
+  //Motor P (avanzar, retroceder, detener)  
+  void avanzar() {
+  digitalWrite(pinMotorP1, HIGH);
+  digitalWrite(pinMotorP2, LOW);
+  analogWrite(MotorDENAP, 200);
+}
+
+void retroceder() {
+  digitalWrite(pinMotorP1, LOW);
+  digitalWrite(pinMotorP2, HIGH);
+  analogWrite(MotorDENAP, 200);
+}
+
+void detenerMotorP() {
+  digitalWrite(pinMotorP1, LOW);
+  digitalWrite(pinMotorP2, LOW);
+}
+
+// Motor D (dirección)
+void girarDerecha() {
+//Avanza a una velocidad controlada 
+    digitalWrite(pinMotorP1, HIGH);
+    digitalWrite(pinMotorP2, LOW);
+    analogWrite(MotorDENAP, 80);
+    // Gira hacia un lado 2 segundos
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, HIGH);
+    analogWrite(MotorDENA, 200);
+    delay(20);
+
+    // Se detiene un momento
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, LOW);
+    delay(1000);
+
+    // Gira hacia el otro lado 2 segundos (para volver a su posición inicial) 
+    digitalWrite(MotorD1, HIGH);
+    digitalWrite(MotorD2, LOW);
+    analogWrite(MotorDENA, 200);
+    delay(20);
+
+    // Se detiene
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, LOW);
+    delay(1000);
+}
+void girarIzquierda() {
+//Avanza a una velocidad controlada 
+    digitalWrite(pinMotorP1, HIGH);
+    digitalWrite(pinMotorP2, LOW);
+    analogWrite(MotorDENAP, 80);
+    // Gira hacia un lado 2 segundos
+    digitalWrite(MotorD1, HIGH);
+    digitalWrite(MotorD2, LOW);
+    analogWrite(MotorDENA, 200);
+    delay(20);
+
+    // Se detiene un momento
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, LOW);
+    delay(1000);
+
+    // Gira hacia el otro lado 2 segundos (para volver a su posición inicial)
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, HIGH);
+    analogWrite(MotorDENA, 200);
+    delay(20);
+
+    // Se detiene
+    digitalWrite(MotorD1, LOW);
+    digitalWrite(MotorD2, LOW);
+    delay(1000);
+ 
+}
+
+void centrarDireccion() {
+  digitalWrite(MotorD1, LOW);
+  digitalWrite(MotorD2, LOW);
+}
+
+// SETUP
+void setup() {
+//Definir los motores como salidas
+  Serial.begin(115200);
+
+  pinMode(pinMotorP1, OUTPUT);
+  pinMode(pinMotorP2, OUTPUT);
+
+  pinMode(MotorD1, OUTPUT);
+  pinMode(MotorD2, OUTPUT);
+  pinMode(MotorDENA, OUTPUT);
+  pinMode(MotorDENAP, OUTPUT);
+}
+
+
+// LOOP AUTÓNOMO
+
+void loop() {
+
+  // Lectura de sensores
+  DISTANCIASensorA = 0.01723 * leerUltrasonico(SensorApinGatillo, SensorApinEco);
+  DISTANCIASensorD = 0.01723 * leerUltrasonico(SensorDpinGatillo, SensorDpinEco);
+  DISTANCIASensorI = 0.01723 * leerUltrasonico(SensorIpinGatillo, SensorIpinEco);
+
+Serial.print("A: "); Serial.print(DISTANCIASensorA);
+Serial.print("  D: "); Serial.print(DISTANCIASensorD);
+Serial.print("  I: "); Serial.println(DISTANCIASensorI);
+
+  //   COMPORTAMIENTO AUTÓNOMO
+
+  // 1. Si adelante hay espacio libre → avanzar recto
+  if (DISTANCIASensorA > 30) {
+    centrarDireccion();
+    avanzar();
+  }
+
+  // 2. Si adelante hay poco espacio → decidir por el lado con mayor distancia
+  else {
+
+    // Si derecha tiene más espacio → girar a la derecha
+    if (DISTANCIASensorD > DISTANCIASensorI) {
+      girarDerecha();
+      avanzar();
+    }
+
+    // Si izquierda tiene más espacio → girar a la izquierda
+    else if (DISTANCIASensorI > DISTANCIASensorD) {
+      girarIzquierda();
+      avanzar();
+    } else if (DISTANCIASensorA<10){
+        retroceder();
+
+    } else if (DISTANCIASensorI<10){
+        retroceder();
+    }else if (DISTANCIASensorD<10){
+        retroceder();
+    }
+    // Si ambos lados están iguales → retroceder un poco
+    else {
+      retroceder();
+      delay(300);
+      detenerMotorP();
+    }
+  }
+
+  delay(40);
+}
